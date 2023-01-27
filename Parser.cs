@@ -9,24 +9,31 @@ public class Parser
     readonly Tokenizer _tokenizer;
 
     Node ParseUnary()
-{
-    if (_tokenizer.Token == Token.Add)
     {
-        _tokenizer.NextToken();
-        return ParseUnary();
+        if (_tokenizer.Token == Token.Add)
+        {
+            _tokenizer.NextToken();
+            return ParseUnary();
+        }
+
+        if (_tokenizer.Token == Token.Subtract)
+        {
+            _tokenizer.NextToken();
+            var rhs = ParseUnary();
+
+            return new Unary(rhs, (a) => -a);
+        }
+        if (_tokenizer.Token == Token.OpenParens)
+        {
+            _tokenizer.NextToken();
+            var node = ParseKnownOperations();
+            if (_tokenizer.Token != Token.CloseParens)
+                throw new SyntaxException("Missing close parenthesis");
+            _tokenizer.NextToken();
+            return node;
+        }
+        return ParseKnownOperations();
     }
-
-    if (_tokenizer.Token == Token.Subtract)
-    {
-        _tokenizer.NextToken();
-        var rhs = ParseUnary();
-
-        return new Unary(rhs, (a) => -a);
-    }
-
-    // No positive/negative operator so parse a leaf node
-    return ParseKnownOperations();
-}
     public Node ParseExpression()
     {
         var expr = ParseKnownOperations();

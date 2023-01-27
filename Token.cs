@@ -5,4 +5,6 @@ public enum Token
     Add,
     Subtract,
     Number,
+OpenParens,
+CloseParens,
 }
