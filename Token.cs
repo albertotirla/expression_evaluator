@@ -1,3 +1,4 @@
+namespace expression_evaluator;
 public enum Token
 {
     EOF,
