@@ -12,7 +12,7 @@ class BinaryOperation : Node
     readonly Node _rhs;
     readonly Func<double, double, double> _op;
 
-    public double Eval()
+    public override double Eval()
     {
         var lhsVal = _lhs.Eval();
         var rhsVal = _rhs.Eval();

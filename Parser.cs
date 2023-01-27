@@ -6,8 +6,27 @@ public class Parser
         _tokenizer = tokenizer;
     }
 
-    Tokenizer _tokenizer;
+    readonly Tokenizer _tokenizer;
 
+    Node ParseUnary()
+{
+    if (_tokenizer.Token == Token.Add)
+    {
+        _tokenizer.NextToken();
+        return ParseUnary();
+    }
+
+    if (_tokenizer.Token == Token.Subtract)
+    {
+        _tokenizer.NextToken();
+        var rhs = ParseUnary();
+
+        return new Unary(rhs, (a) => -a);
+    }
+
+    // No positive/negative operator so parse a leaf node
+    return ParseKnownOperations();
+}
     public Node ParseExpression()
     {
         var expr = ParseKnownOperations();
@@ -21,10 +40,10 @@ public class Parser
     }
     Node ParseKnownOperations()
     {
-        var lhs = ParseFactor();
+        var lhs = ParseUnary();
         while (true)
         {
-            Func<double, double, double> op = null;
+            Func<double, double, double>? op = null;
             if (_tokenizer.Token == Token.Add)
             {
                 op = (a, b) => a + b;
@@ -38,7 +57,7 @@ public class Parser
                 return lhs;
             }
             _tokenizer.NextToken();
-            var rhs = ParseFactor();
+            var rhs = ParseUnary();
             lhs = new BinaryOperation(lhs, rhs, op);
         }
     }
