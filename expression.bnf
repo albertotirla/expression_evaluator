@@ -1,0 +1,5 @@
+<expr> := <grouping><operand><grouping>* | <sub_expr>;
+<grouping> :=(<sub_expr>*);
+<sub_expr> :=<factor><operand><factor>;
+<factor> := 1..=9;
+<operand> :=* | + | - | /;
