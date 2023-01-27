@@ -1,13 +1,13 @@
 namespace expression_evaluator;
 
-class Number : INode
+class Number : Node
 {
     public Number(double number) => _number = number;
 
     readonly double _number;
 
-    public double Eval()
+    public override double Eval()
     {
         return _number;
     }
-}
+}   
